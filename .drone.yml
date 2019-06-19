@@ -1,21 +1,26 @@
 kind: pipeline
-name: greeting
+name: test
 
 steps:
-- name: en
-  image: alpine
+- name: docker-test
+  image: docker:dind
+  volumes:
+    - name: dockersock
+      path: /var/run
+  environment:
+    KEY_FILE:
+      from_secret: key
   commands:
-  - echo hello
-  - echo world
+    - echo $KEY_FILE
 
-- name: es
-  image: alpine
-  commands:
-  - echo hola
-  - echo mundo
+services:
+  - name: docker
+    image: docker:dind
+    privileged: true
+    volumes:
+      - name: dockersock
+        path: /var/run
 
-- name: fr
-  image: alpine
-  commands:
-  - echo bonjour
-  - echo monde
+volumes:
+  - name: dockersock
+    temp: {}
