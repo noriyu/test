@@ -7,11 +7,8 @@ steps:
   volumes:
     - name: dockersock
       path: /var/run
-  environment:
-    KEY_FILE:
-      from_secret: key
   commands:
-    - echo $KEY_FILE
+    - echo ${DRONE_BUILD_NUMBER}
 
 services:
   - name: docker
