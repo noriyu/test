@@ -2,22 +2,8 @@ kind: pipeline
 name: test
 
 steps:
-- name: docker-test
-  image: docker:dind
-  volumes:
-    - name: dockersock
-      path: /var/run
+- name: deploy-stg
+  image: lachlanevenson/k8s-kubectl
   commands:
-    - echo ${DRONE_BUILD_NUMBER}
-
-services:
-  - name: docker
-    image: docker:dind
-    privileged: true
-    volumes:
-      - name: dockersock
-        path: /var/run
-
-volumes:
-  - name: dockersock
-    temp: {}
+    - eval "echo \"$(cat test-template)\"" > test.yaml
+    - cat test.yaml
